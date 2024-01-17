@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres
+    container_name: 'turbonea-postgres'
+    ports:
+      - 15433:5432
+    environment:
+      POSTGRES_DB: turbonea
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: turbonea
+  redis:
+    image: redis
+    container_name: 'turbonea-redis'
+    ports:
+      - 16379:6379

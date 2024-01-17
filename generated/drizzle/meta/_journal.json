@@ -1,0 +1,27 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1705496307496,
+      "tag": "0000_lying_nehzno",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1705526133580,
+      "tag": "0001_public_wildside",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705526288341,
+      "tag": "0002_round_makkari",
+      "breakpoints": true
+    }
+  ]
+}
