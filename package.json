@@ -11,6 +11,7 @@
     "start": "nest start",
     "drizzle:generate": "drizzle-kit generate:pg --config=.drizzle.config.ts",
     "drizzle:migrate": "tsx scripts/drizzle.migrate.ts",
+    "docs:generate": "ts-node scripts/schema.generate.ts && npx spectaql specta-config.yml",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -36,7 +37,8 @@
     "postgres": "^3.4.3",
     "redis": "^4.6.12",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

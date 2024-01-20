@@ -7,6 +7,7 @@ import { DrizzleModule } from './modules/drizzle/drizzle.module';
 import { PostModule } from './modules/post/post.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { InteractionModule } from './modules/interaction/interaction.module';
+import { CacheModule } from './modules/cache/cache.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { InteractionModule } from './modules/interaction/interaction.module';
       autoSchemaFile: true,
     }),
     DrizzleModule,
+    CacheModule,
     UserModule,
     PostModule,
     CommentModule,

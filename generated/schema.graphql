@@ -1,0 +1,52 @@
+"""user"""
+type User {
+  id: ID!
+  name: String!
+  friends: [User!]!
+  posts: [Post!]!
+}
+
+type Interaction {
+  id: ID!
+  type: String!
+  author: User!
+}
+
+type Comment {
+  id: ID!
+  content: String!
+  author: User!
+  interactions: [Interaction!]!
+}
+
+"""post"""
+type Post {
+  id: ID!
+  content: String!
+  author: User!
+  comments: [Comment!]!
+  interactions: [Interaction!]!
+}
+
+type Query {
+  getPost(input: GetPostInput!): Post!
+  getUser(input: GetUserInput!): User!
+  getUsers: [User!]!
+}
+
+input GetPostInput {
+  id: String!
+}
+
+input GetUserInput {
+  id: String!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+}
+
+"""user"""
+input CreateUserInput {
+  name: String!
+}

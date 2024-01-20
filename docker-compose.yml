@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_USER: turbonea
   redis:
-    image: redis
+    image: 'redis/redis-stack:edge'
     container_name: 'turbonea-redis'
     ports:
       - 16379:6379
