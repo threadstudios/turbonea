@@ -6,12 +6,12 @@ import {
   Args,
   Parent,
 } from '@nestjs/graphql';
-import { User } from '../model/user.model';
-import { Post } from '../../post/model/post.model';
-import { UserService } from '../service/user.service';
-import { CreateUserInput } from '../dto/create-user.input';
-import { GetUserInput } from '../dto/get-user.input';
-import { PostService } from '../../post/service/post.service';
+import { Post } from 'src/modules/post/model/post.model';
+import { PostService } from 'src/modules/post/service/post.service';
+import { CreateUserInput } from 'src/modules/user/dto/create-user.input';
+import { GetUserInput } from 'src/modules/user/dto/get-user.input';
+import { User } from 'src/modules/user/model/user.model';
+import { UserService } from 'src/modules/user/service/user.service';
 
 @Resolver(() => User)
 export class UserResolver {

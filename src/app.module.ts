@@ -8,6 +8,7 @@ import { PostModule } from './modules/post/post.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { InteractionModule } from './modules/interaction/interaction.module';
 import { CacheModule } from './modules/cache/cache.module';
+import { ResolverModule } from './modules/resolver/resolver.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CacheModule } from './modules/cache/cache.module';
     PostModule,
     CommentModule,
     InteractionModule,
+    ResolverModule,
   ],
   controllers: [],
   providers: [],

@@ -1,14 +1,13 @@
 import { Resolver, Query, ResolveField, Args, Parent } from '@nestjs/graphql';
-import { Post } from '../model/post.model';
-import { PostService } from '../../post/service/post.service';
-import { GetPostInput } from '../dto/get-post.input';
-import { User } from '../../user/model/user.model';
-import { UserService } from '../../user/service/user.service';
-import { DbPost } from '../../drizzle/schema';
-import { Comment } from '../../comment/model/comment.model';
-import { CommentService } from '../../comment/service/comment.service';
-import { InteractionService } from '../../interaction/service/interaction.service';
-import { Interaction } from '../../interaction/model/interaction.model';
+import { CommentService } from 'src/modules/comment/service/comment.service';
+import { DbPost } from 'src/modules/drizzle/schema';
+import { Interaction } from 'src/modules/interaction/model/interaction.model';
+import { InteractionService } from 'src/modules/interaction/service/interaction.service';
+import { GetPostInput } from 'src/modules/post/dto/get-post.input';
+import { Post } from 'src/modules/post/model/post.model';
+import { PostService } from 'src/modules/post/service/post.service';
+import { User } from 'src/modules/user/model/user.model';
+import { UserService } from 'src/modules/user/service/user.service';
 
 @Resolver(() => Post)
 export class PostResolver {

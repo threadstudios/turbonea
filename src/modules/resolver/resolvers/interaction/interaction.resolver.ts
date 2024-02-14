@@ -1,8 +1,8 @@
 import { Resolver, ResolveField, Parent } from '@nestjs/graphql';
-import { User } from '../../user/model/user.model';
-import { UserService } from '../../user/service/user.service';
-import { DbPost } from '../../drizzle/schema';
-import { Interaction } from '../../interaction/model/interaction.model';
+import { DbPost } from 'src/modules/drizzle/schema';
+import { Interaction } from 'src/modules/interaction/model/interaction.model';
+import { User } from 'src/modules/user/model/user.model';
+import { UserService } from 'src/modules/user/service/user.service';
 
 @Resolver(() => Interaction)
 export class InteractionResolver {
