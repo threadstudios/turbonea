@@ -2,12 +2,13 @@ import { UserRepository } from './../repository/user.repository';
 import { v4 } from 'uuid';
 import { DbNewUser, DbUser, users } from '../../drizzle/schema';
 import { DrizzleService } from './../../drizzle/service/drizzle.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CacheService } from '../../cache/service/cache.service';
 import { CacheKeyConfig } from '../../cache/interfaces/cache-key-config.interface';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
   constructor(
     private readonly drizzle: DrizzleService,
     private readonly userRepository: UserRepository,
@@ -38,8 +39,40 @@ export class UserService {
   }
 
   async getUsers(): Promise<DbUser[]> {
-    const result = await this.drizzle.db.select().from(users);
-    return result;
+    const result = await this.drizzle.db.select({ id: users.id }).from(users);
+    const redisResults = await this.cache.getMany<DbUser>(
+      result.map((res) => this.cacheKeyConfig.individualKey(res.id)),
+    );
+    const sortedResults = result.reduce(
+      (acc, _item, index) => {
+        if (redisResults[index]) {
+          acc.resolved.push(redisResults[index]);
+        } else {
+          acc.nonResolved.push(result[index].id);
+        }
+        return acc;
+      },
+      { resolved: [], nonResolved: [] },
+    );
+
+    if (!sortedResults.nonResolved.length) {
+      return sortedResults.resolved;
+    }
+
+    const missing = await this.userRepository.getUsersById(
+      sortedResults.nonResolved,
+    );
+    return [...sortedResults.resolved, ...missing];
+  }
+
+  async getUsersById(ids: string[]): Promise<DbUser[]> {
+    this.logger.log('Batch fetching Users');
+    return this.userRepository.getUsersById(ids);
+  }
+
+  async getFriendsForIds(ids: string[]): Promise<DbUser[][]> {
+    this.logger.log('Batch fetching Friends (users)');
+    return this.userRepository.getFriendsForIds(ids);
   }
 
   async getFriends(id: string): Promise<any[]> {

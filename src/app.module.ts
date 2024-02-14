@@ -8,18 +8,25 @@ import { PostModule } from './modules/post/post.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { InteractionModule } from './modules/interaction/interaction.module';
 import { CacheModule } from './modules/cache/cache.module';
-import { ResolverModule } from './modules/resolver/resolver.module';
+import { GraphModule } from './modules/graph/graph.module';
+import { DataLoaderService } from './modules/graph/service/dataLoader.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    GraphQLModule.forRoot<MercuriusDriverConfig>({
+    GraphQLModule.forRootAsync<MercuriusDriverConfig>({
       driver: MercuriusDriver,
-      graphiql: true,
-      buildSchemaOptions: {
-        numberScalarMode: 'integer',
-      },
-      autoSchemaFile: true,
+      imports: [GraphModule],
+      inject: [DataLoaderService],
+      useFactory: async (dataLoader: DataLoaderService) => ({
+        buildSchemaOptions: {
+          numberScalarMode: 'integer',
+        },
+        autoSchemaFile: true,
+        context: (request, reply) => ({
+          loaders: dataLoader.getLoaders(),
+        }),
+      }),
     }),
     DrizzleModule,
     CacheModule,
@@ -27,7 +34,7 @@ import { ResolverModule } from './modules/resolver/resolver.module';
     PostModule,
     CommentModule,
     InteractionModule,
-    ResolverModule,
+    GraphModule,
   ],
   controllers: [],
   providers: [],

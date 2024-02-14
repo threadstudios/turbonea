@@ -5,20 +5,18 @@ import {
   Mutation,
   Args,
   Parent,
+  Context,
 } from '@nestjs/graphql';
 import { Post } from 'src/modules/post/model/post.model';
-import { PostService } from 'src/modules/post/service/post.service';
 import { CreateUserInput } from 'src/modules/user/dto/create-user.input';
 import { GetUserInput } from 'src/modules/user/dto/get-user.input';
 import { User } from 'src/modules/user/model/user.model';
 import { UserService } from 'src/modules/user/service/user.service';
+import { IGraphQLContext } from '../../interfaces/graphQlContext.interface';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(
-    private readonly userService: UserService,
-    private readonly postService: PostService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Query(() => User)
   async getUser(@Args('input') { id }: GetUserInput) {
@@ -27,7 +25,8 @@ export class UserResolver {
 
   @Query(() => [User])
   async getUsers() {
-    return await this.userService.getUsers();
+    const users = await this.userService.getUsers();
+    return users;
   }
 
   @Mutation(() => User)
@@ -37,12 +36,15 @@ export class UserResolver {
   }
 
   @ResolveField(() => [Post])
-  async posts(@Parent() parent: User) {
-    return this.postService.getPostsByUserId(parent.id);
+  async posts(@Parent() parent: User, @Context() { loaders }: IGraphQLContext) {
+    return loaders.usersPostsLoader.load(parent.id);
   }
 
   @ResolveField(() => [User])
-  async friends(@Parent() parent: User) {
-    return await this.userService.getFriends(parent.id);
+  async friends(
+    @Parent() parent: User,
+    @Context() { loaders }: IGraphQLContext,
+  ) {
+    return loaders.friendsLoader.load(parent.id);
   }
 }

@@ -6,10 +6,10 @@ import {
 
 import { printSchema } from 'graphql';
 import * as fs from 'fs';
-import { PostResolver } from 'src/modules/resolver/resolvers/post/post.resolver';
-import { CommentResolver } from 'src/modules/resolver/resolvers/comment/comment.resolver';
-import { InteractionResolver } from 'src/modules/resolver/resolvers/interaction/interaction.resolver';
-import { UserResolver } from 'src/modules/resolver/resolvers/user/user.resolver';
+import { PostResolver } from 'src/modules/graph/resolvers/post/post.resolver';
+import { CommentResolver } from 'src/modules/graph/resolvers/comment/comment.resolver';
+import { InteractionResolver } from 'src/modules/graph/resolvers/interaction/interaction.resolver';
+import { UserResolver } from 'src/modules/graph/resolvers/user/user.resolver';
 
 async function generateSchema() {
   const app = await NestFactory.create(GraphQLSchemaBuilderModule);

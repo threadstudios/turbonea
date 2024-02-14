@@ -13,11 +13,6 @@ export class DrizzleService implements OnModuleInit {
     );
     this.db = drizzle(queryClient, {
       schema,
-      logger: {
-        logQuery(query, params) {
-          Logger.log('Drizzle', query, params);
-        },
-      },
     });
   }
 }

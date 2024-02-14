@@ -46,6 +46,11 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
     await this.cache.rPush(key, value);
   }
 
+  async getMany<Model>(keys: string[]): Promise<Model[]> {
+    const result = await this.cache.json.mGet(keys, '.');
+    return result as Model[];
+  }
+
   async writeThrough<Before, After>({
     id,
     value,

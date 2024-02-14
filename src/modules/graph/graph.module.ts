@@ -7,9 +7,17 @@ import { UserModule } from '../user/user.module';
 import { CommentModule } from '../comment/comment.module';
 import { InteractionModule } from '../interaction/interaction.module';
 import { PostModule } from '../post/post.module';
+import { DataLoaderService } from './service/dataLoader.service';
 
 @Module({
   imports: [UserModule, CommentModule, InteractionModule, PostModule],
-  providers: [CommentResolver, InteractionResolver, PostResolver, UserResolver],
+  providers: [
+    CommentResolver,
+    InteractionResolver,
+    PostResolver,
+    UserResolver,
+    DataLoaderService,
+  ],
+  exports: [DataLoaderService],
 })
-export class ResolverModule {}
+export class GraphModule {}
