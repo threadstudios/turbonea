@@ -10,6 +10,7 @@ import { InteractionModule } from './modules/interaction/interaction.module';
 import { CacheModule } from './modules/cache/cache.module';
 import { GraphModule } from './modules/graph/graph.module';
 import { DataLoaderService } from './modules/graph/service/dataLoader.service';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -23,11 +24,13 @@ import { DataLoaderService } from './modules/graph/service/dataLoader.service';
           numberScalarMode: 'integer',
         },
         autoSchemaFile: true,
+        graphiql: true,
         context: (request, reply) => ({
           loaders: dataLoader.getLoaders(),
         }),
       }),
     }),
+    EventEmitterModule.forRoot(),
     DrizzleModule,
     CacheModule,
     UserModule,

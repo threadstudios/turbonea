@@ -1,4 +1,4 @@
-export interface CacheKeyConfig {
-  individualKey: (id: string) => string;
-  listKey: (id: string, subKey: string) => string;
+export interface CacheKeyConfig<Model> {
+  individualKey: (key: string) => string;
+  listKey: (key: string, subKey: string) => string;
 }
