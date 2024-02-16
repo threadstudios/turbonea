@@ -5,4 +5,7 @@ import { DbNewUser } from '../../drizzle/schema';
 export class CreateUserInput implements DbNewUser {
   @Field()
   name: string;
+
+  @Field()
+  email?: string;
 }
