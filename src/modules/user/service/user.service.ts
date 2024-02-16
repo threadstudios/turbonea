@@ -10,24 +10,27 @@ import { UserEvents } from '../user.events';
 export class UserService {
   private readonly logger = new Logger(UserService.name);
   constructor(
-    private readonly drizzle: DrizzleService,
     private readonly userRepository: UserRepository,
     private readonly userCache: UserCacheService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createUser(newUser: DbNewUser): Promise<DbUser> {
-    const user = await this.userRepository.createUser(newUser);
+    const user = await this.userRepository.create(newUser);
     this.eventEmitter.emit(UserEvents.UserCreated, { id: user.id });
     return user;
   }
 
   async getUserById(id: string): Promise<DbUser> {
-    return this.userRepository.getUserById(id);
+    return this.userRepository.getById(id);
   }
 
   async getUsers(): Promise<DbUser[]> {
-    const result = await this.drizzle.db.select({ id: users.id }).from(users);
+    const result = await this.userRepository.getAll({
+      select: { id: users.id },
+    });
+
+    // TODO: tidy this into helper functions
     const redisResults = await this.userCache.getMany<DbUser>(
       result.map((res) => res.id),
     );
@@ -47,19 +50,22 @@ export class UserService {
       return sortedResults.resolved;
     }
 
-    const missing = await this.userRepository.getUsersById(
+    this.logger.warn('Users missing from User Cache (Performing extra query)');
+
+    const missing = await this.userRepository.getByIds(
       sortedResults.nonResolved,
     );
+
+    await this.userCache.setMany(missing);
+
     return [...sortedResults.resolved, ...missing];
   }
 
   async getUsersById(ids: string[]): Promise<DbUser[]> {
-    this.logger.log('Batch fetching Users');
-    return this.userRepository.getUsersById(ids);
+    return this.userRepository.getByIds(ids);
   }
 
   async getFriendsForIds(ids: string[]): Promise<DbUser[][]> {
-    this.logger.log('Batch fetching Friends (users)');
     return this.userRepository.getFriendsForIds(ids);
   }
 }

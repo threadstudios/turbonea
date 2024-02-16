@@ -11,6 +11,7 @@ import { CacheModule } from './modules/cache/cache.module';
 import { GraphModule } from './modules/graph/graph.module';
 import { DataLoaderService } from './modules/graph/service/dataLoader.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { CommonModule } from './modules/common/common.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     CommentModule,
     InteractionModule,
     GraphModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],

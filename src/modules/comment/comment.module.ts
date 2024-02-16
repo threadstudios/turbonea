@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CommentService } from './service/comment.service';
-import { InteractionModule } from '../interaction/interaction.module';
+import { CommentRepository } from './repository/comment.repository';
+import { CommentCacheService } from './cache/comment.cache';
 
 @Module({
-  imports: [InteractionModule],
-  providers: [CommentService],
+  imports: [],
+  providers: [CommentService, CommentRepository, CommentCacheService],
   exports: [CommentService],
 })
 export class CommentModule {}

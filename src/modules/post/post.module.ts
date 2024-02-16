@@ -1,12 +1,11 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PostService } from './service/post.service';
-import { UserModule } from '../user/user.module';
-import { CommentModule } from '../comment/comment.module';
-import { InteractionModule } from '../interaction/interaction.module';
+import { PostRepository } from './repository/post.repository';
+import { PostCacheService } from './cache/post.cache';
 
 @Module({
-  imports: [forwardRef(() => UserModule), CommentModule, InteractionModule],
-  providers: [PostService],
+  imports: [],
+  providers: [PostService, PostRepository, PostCacheService],
   exports: [PostService],
 })
 export class PostModule {}

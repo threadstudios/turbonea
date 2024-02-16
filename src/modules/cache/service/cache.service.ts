@@ -7,8 +7,14 @@ import {
 import { createClient } from 'redis';
 import { EntityCache } from 'src/modules/common/cache/entityCache';
 
+type RedisJSON = null | boolean | number | string | Date | RedisJSONObject;
+interface RedisJSONObject {
+  [key: string]: RedisJSON;
+  [key: number]: RedisJSON;
+}
+
 @Injectable()
-export class CacheService<Model>
+export class CacheService<Model extends RedisJSONObject>
   extends EntityCache<Model>
   implements OnModuleInit, OnModuleDestroy
 {
@@ -28,7 +34,7 @@ export class CacheService<Model>
 
   async get<Model>(key: string): Promise<Model | undefined> {
     const completeKey = this.cacheKeys.individualKey(key);
-    this.logger.log(`cache get`, { completeKey });
+    this.logger.log('Executed Redis Get');
     const result = this.redis.json.get(
       this.cacheKeys.individualKey(completeKey),
     );
@@ -54,7 +60,20 @@ export class CacheService<Model>
   async getMany<Model>(ids: string[]): Promise<Model[]> {
     const keys = ids.map((id) => this.cacheKeys.individualKey(id));
     const result = await this.redis.json.mGet(keys, '.');
-    this.logger.log('getMany called:', { keys });
+    this.logger.log('Executed Redis MGET');
     return result as Model[];
+  }
+
+  async setMany(records: Record<string, any>[]) {
+    this.logger.log('Executed Redis MSET');
+    return this.redis.json.mSet(
+      records.map((record) => {
+        return {
+          key: this.cacheKeys.individualKey(record.id),
+          value: record,
+          path: '$',
+        };
+      }),
+    );
   }
 }

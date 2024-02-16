@@ -1,10 +1,15 @@
-import { Module, forwardRef } from '@nestjs/common';
-import { UserModule } from '../user/user.module';
+import { Module } from '@nestjs/common';
 import { InteractionService } from './service/interaction.service';
+import { InteractionRepository } from './repository/interaction.repository';
+import { InteractionCacheService } from './cache/interaction.cache';
 
 @Module({
-  imports: [forwardRef(() => UserModule)],
-  providers: [InteractionService],
+  imports: [],
+  providers: [
+    InteractionService,
+    InteractionRepository,
+    InteractionCacheService,
+  ],
   exports: [InteractionService],
 })
 export class InteractionModule {}

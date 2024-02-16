@@ -1,34 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { DrizzleService } from '../../drizzle/service/drizzle.service';
-import { DbComment, comments } from '../../drizzle/schema';
-import { eq, inArray } from 'drizzle-orm';
+import { DbComment } from '../../drizzle/schema';
+import { CommentRepository } from '../repository/comment.repository';
+import { mapResponseToIds } from 'src/modules/common/mapper/mapResponseToIds';
 
 @Injectable()
 export class CommentService {
   private readonly logger = new Logger(CommentService.name);
-  constructor(private readonly drizzle: DrizzleService) {}
+  constructor(private readonly commentRepository: CommentRepository) {}
 
   async getCommentsByPostId(postId: string) {
-    return this.drizzle.db
-      .select()
-      .from(comments)
-      .where(eq(comments.postId, postId));
+    return this.commentRepository.getByPostId(postId);
   }
 
   async getCommentsByPostIds(postIds: string[]): Promise<DbComment[][]> {
-    this.logger.log('Batch fetching Comments');
-    const commentResult = await this.drizzle.db
-      .select()
-      .from(comments)
-      .where(inArray(comments.postId, postIds));
-    const reduced = commentResult.reduce(
-      (acc: Record<string, DbComment[]>, row) => {
-        if (!acc[row.postId]) acc[row.postId] = [];
-        acc[row.postId].push(row);
-        return acc;
-      },
-      {},
-    );
-    return postIds.map((id) => reduced[id] || []);
+    const commentResult = await this.commentRepository.getByPostIds(postIds);
+    return mapResponseToIds<DbComment>({
+      result: commentResult,
+      byKey: 'postId',
+      ids: postIds,
+    });
   }
 }

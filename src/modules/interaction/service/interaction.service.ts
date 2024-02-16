@@ -1,34 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { DrizzleService } from '../../drizzle/service/drizzle.service';
-import { DbInteraction, interactions } from '../../drizzle/schema';
-import { eq, inArray } from 'drizzle-orm';
+import { DbInteraction } from '../../drizzle/schema';
+import { InteractionRepository } from '../repository/interaction.repository';
+import { mapResponseToIds } from 'src/modules/common/mapper/mapResponseToIds';
 
 @Injectable()
 export class InteractionService {
   private readonly logger = new Logger(InteractionService.name);
-  constructor(private readonly drizzle: DrizzleService) {}
+  constructor(private readonly interactionRepository: InteractionRepository) {}
 
   async getInteractionsByEntityId(entityId: string) {
-    return this.drizzle.db
-      .select()
-      .from(interactions)
-      .where(eq(interactions.entityId, entityId));
+    return this.interactionRepository.getByEntityId(entityId);
   }
 
   async getInteractionsByEntityIds(entityIds: string[]) {
-    this.logger.log('Batch fetching Interactions');
-    const interactionResult = await this.drizzle.db
-      .select()
-      .from(interactions)
-      .where(inArray(interactions.entityId, entityIds));
-    const reduced = interactionResult.reduce(
-      (acc: Record<string, DbInteraction[]>, row) => {
-        if (!acc[row.entityId]) acc[row.entityId] = [];
-        acc[row.entityId].push(row);
-        return acc;
-      },
-      {},
-    );
-    return entityIds.map((id) => reduced[id] || []);
+    const interactionResult =
+      await this.interactionRepository.getByEntityIds(entityIds);
+    return mapResponseToIds<DbInteraction>({
+      result: interactionResult,
+      byKey: 'entityId',
+      ids: entityIds,
+    });
   }
 }

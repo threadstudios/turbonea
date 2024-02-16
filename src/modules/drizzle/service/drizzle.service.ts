@@ -6,6 +6,9 @@ import * as schema from '../schema';
 @Injectable()
 export class DrizzleService implements OnModuleInit {
   public db: PostgresJsDatabase<typeof schema>;
+  private readonly logger = new Logger(DrizzleService.name);
+
+  constructor() {}
 
   onModuleInit() {
     const queryClient = postgres(
@@ -13,6 +16,11 @@ export class DrizzleService implements OnModuleInit {
     );
     this.db = drizzle(queryClient, {
       schema,
+      logger: {
+        logQuery: (query, opts) => {
+          this.logger.log('Executed DB Query');
+        },
+      },
     });
   }
 }
