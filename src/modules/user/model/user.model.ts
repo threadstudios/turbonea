@@ -10,6 +10,9 @@ export class User implements DbUser {
   @Field()
   name: string;
 
+  @Field({ nullable: true })
+  email: string;
+
   @Field(() => [User])
   friends: User[];
 

@@ -12,6 +12,7 @@ import { GraphModule } from './modules/graph/graph.module';
 import { DataLoaderService } from './modules/graph/service/dataLoader.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CommonModule } from './modules/common/common.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { CommonModule } from './modules/common/common.module';
     InteractionModule,
     GraphModule,
     CommonModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

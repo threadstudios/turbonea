@@ -6,6 +6,7 @@ export const users = pgTable('user', {
     .primaryKey()
     .default(sql`uuid_generate_v4()`),
   name: text('name').notNull(),
+  email: text('email'),
 });
 
 export const posts = pgTable('post', {

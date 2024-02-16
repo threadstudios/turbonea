@@ -8,9 +8,16 @@ import { CommentModule } from '../comment/comment.module';
 import { InteractionModule } from '../interaction/interaction.module';
 import { PostModule } from '../post/post.module';
 import { DataLoaderService } from './service/dataLoader.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [UserModule, CommentModule, InteractionModule, PostModule],
+  imports: [
+    UserModule,
+    CommentModule,
+    InteractionModule,
+    PostModule,
+    AuthModule,
+  ],
   providers: [
     CommentResolver,
     InteractionResolver,

@@ -13,16 +13,21 @@ import { GetUserInput } from 'src/modules/user/dto/get-user.input';
 import { User } from 'src/modules/user/model/user.model';
 import { UserService } from 'src/modules/user/service/user.service';
 import { IGraphQLContext } from '../../interfaces/graphQlContext.interface';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/modules/auth/guard/auth.guard';
+import { CurrentUser } from 'src/modules/auth/decorator/currentUser.decorator';
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard)
   @Query(() => User)
   async getUser(@Args('input') { id }: GetUserInput) {
     return await this.userService.getUserById(id);
   }
 
+  @UseGuards(AuthGuard)
   @Query(() => [User])
   async getUsers() {
     const users = await this.userService.getUsers();
@@ -46,5 +51,13 @@ export class UserResolver {
     @Context() { loaders }: IGraphQLContext,
   ) {
     return loaders.friendsLoader.load(parent.id);
+  }
+
+  @ResolveField(() => String)
+  async email(@Parent() parent: User, @CurrentUser() loggedIn: boolean) {
+    if (!loggedIn) {
+      return;
+    }
+    return parent.email;
   }
 }
