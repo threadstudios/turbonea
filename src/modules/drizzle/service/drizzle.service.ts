@@ -11,9 +11,7 @@ export class DrizzleService implements OnModuleInit {
   constructor() {}
 
   onModuleInit() {
-    const queryClient = postgres(
-      'postgres://turbonea:example@0.0.0.0:15433/turbonea',
-    );
+    const queryClient = postgres(process.env.DATABASE_URL);
     this.db = drizzle(queryClient, {
       schema,
       logger: {
