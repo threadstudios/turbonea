@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 
-import { DbComment, DbInteraction } from 'src/modules/drizzle/schema';
 import { IDataloaders } from '../interfaces/dataloader.interface';
-import { InteractionService } from 'src/modules/interaction/service/interaction.service';
 import { UserDataLoader } from './dataloader/user.dataLoader';
 import { PostDataLoader } from './dataloader/post.dataLoader';
 import { CommentDataLoader } from './dataloader/comment.dataLoader';
