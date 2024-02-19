@@ -1,6 +1,6 @@
 import { UserRepository } from './../repository/user.repository';
 import { DbNewUser, DbUser, users } from '../../drizzle/schema';
-import { DrizzleService } from './../../drizzle/service/drizzle.service';
+import { v4 } from 'uuid';
 import { Injectable, Logger } from '@nestjs/common';
 import { UserCacheService } from '../cache/user.cache';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -16,7 +16,8 @@ export class UserService {
   ) {}
 
   async createUser(newUser: DbNewUser): Promise<DbUser> {
-    const user = await this.userRepository.create(newUser);
+    const id = v4();
+    const user = await this.userRepository.create({ id, ...newUser });
     this.eventEmitter.emit(UserEvents.UserCreated, { id: user.id });
     return user;
   }

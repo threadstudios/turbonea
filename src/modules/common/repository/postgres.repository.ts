@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ColumnsSelection, eq, inArray } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { PgSelectBase, PgTableWithColumns } from 'drizzle-orm/pg-core';
 import { DrizzleService } from 'src/modules/drizzle/service/drizzle.service';
 import { GetAllProps } from '../interfaces/getAllProps.interface';

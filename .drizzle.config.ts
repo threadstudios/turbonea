@@ -6,6 +6,6 @@ export default {
   out: './generated/drizzle',
   driver: 'pg',
   dbCredentials: {
-    connectionString: 'postgres://turbonea:example@0.0.0.0:15433/turbonea',
+    connectionString: process.env.DATABASE_URL as string,
   },
 } satisfies Config;

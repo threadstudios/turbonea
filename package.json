@@ -7,10 +7,12 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "build:railway": "nest build && drizzle:migrate && seed",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "drizzle:generate": "drizzle-kit generate:pg --config=.drizzle.config.ts",
     "drizzle:migrate": "tsx scripts/drizzle.migrate.ts",
+    "seed": "tsx scripts/seed/seed.ts",
     "docs:generate": "ts-node scripts/schema.generate.ts && npx spectaql specta-config.yml",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -43,6 +45,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
@@ -50,6 +53,7 @@
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
     "@types/supertest": "^6.0.0",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "drizzle-kit": "^0.20.13",

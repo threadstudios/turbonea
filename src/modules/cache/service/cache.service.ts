@@ -23,7 +23,7 @@ export class CacheService<Model extends RedisJSONObject>
 
   async onModuleInit() {
     this.redis = createClient({
-      url: `redis://localhost:16379`,
+      url: process.env.REDIS_URL,
     });
     await this.redis.connect();
   }
@@ -46,11 +46,16 @@ export class CacheService<Model extends RedisJSONObject>
     return this.redis.json.set(this.cacheKeys.individualKey(key), '$', value);
   }
 
-  private async getList(key: string, start?: number, end?: number) {
-    const exists = await this.redis.exists(key);
-    if (!exists) return;
-    const result = await this.redis.lRange(key, start, end);
-    return result;
+  async setList(key: string, subkey: string, value: any[]) {
+    return this.redis.json.set(this.cacheKeys.listKey(key, subkey), '$', value);
+  }
+
+  async getList(key: string, subkey: string): Promise<Model[] | undefined> {
+    const result = this.redis.json.get(this.cacheKeys.listKey(key, subkey));
+    if (!result) {
+      return;
+    }
+    return result as unknown as Model[];
   }
 
   async addToList(key: string, value: string) {
