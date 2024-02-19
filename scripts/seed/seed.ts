@@ -6,9 +6,7 @@ import { generatePosts } from './data/posts';
 import { sql } from 'drizzle-orm';
 import { generateComments } from './data/comments';
 
-const queryClient = postgres(
-  'postgres://turbonea:example@0.0.0.0:15433/turbonea',
-);
+const queryClient = postgres(process.env.DATABASE_URL);
 
 const db = drizzle(queryClient, {
   schema,
