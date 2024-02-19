@@ -1,74 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
 
-import { UserService } from 'src/modules/user/service/user.service';
-import {
-  DbPost,
-  DbUser,
-  DbComment,
-  DbInteraction,
-} from 'src/modules/drizzle/schema';
+import { DbComment, DbInteraction } from 'src/modules/drizzle/schema';
 import { IDataloaders } from '../interfaces/dataloader.interface';
-import { PostService } from 'src/modules/post/service/post.service';
-import { CommentService } from 'src/modules/comment/service/comment.service';
 import { InteractionService } from 'src/modules/interaction/service/interaction.service';
+import { UserDataLoader } from './dataloader/user.dataloader';
+import { PostDataLoader } from './dataloader/post.dataLoader';
+import { CommentDataLoader } from './dataloader/comment.dataLoader';
+import { InteractionDataLoader } from './dataloader/interaction.dataLoader';
 
 @Injectable()
 export class DataLoaderService {
   constructor(
-    private readonly userService: UserService,
-    private readonly postService: PostService,
-    private readonly commentService: CommentService,
-    private readonly interactionService: InteractionService,
+    private readonly userDataLoader: UserDataLoader,
+    private readonly postDataLoader: PostDataLoader,
+    private readonly commentDataLoader: CommentDataLoader,
+    private readonly interactionDataLoader: InteractionDataLoader,
   ) {}
 
   getLoaders(): IDataloaders {
-    const usersLoader = this.createUsersLoader();
-    const friendsLoader = this.createFriendsLoader();
-    const usersPostsLoader = this.createUsersPostsLoader();
-    const postsCommentsLoader = this.createPostsCommentsLoader();
-    const entitiesInteractionsLoader = this.createEntitiesInteractionsLoader();
+    const usersLoaders = this.userDataLoader.getLoaders();
+    const postsLoaders = this.postDataLoader.getLoaders();
+    const commentsLoaders = this.commentDataLoader.getLoaders();
+    const interactionsLoaders = this.interactionDataLoader.getLoaders();
 
     return {
-      usersLoader,
-      friendsLoader,
-      usersPostsLoader,
-      postsCommentsLoader,
-      entitiesInteractionsLoader,
+      friendsLoader: usersLoaders.friendsLoader,
+      usersLoader: usersLoaders.usersLoader,
+      usersPostsLoader: postsLoaders.usersPostsLoader,
+      postsCommentsLoader: commentsLoaders.postsCommentsLoader,
+      entitiesInteractionsLoader:
+        interactionsLoaders.entitiesInteractionsLoader,
     };
-  }
-
-  private createUsersLoader() {
-    return new DataLoader<string, DbUser>(
-      async (ids: string[]) => await this.userService.getUsersById(ids),
-    );
-  }
-
-  private createFriendsLoader() {
-    return new DataLoader<string, DbUser[]>(
-      async (userIds: string[]) =>
-        await this.userService.getFriendsForIds(userIds),
-    );
-  }
-
-  private createUsersPostsLoader() {
-    return new DataLoader<string, DbPost[]>(
-      async (userIds: string[]) =>
-        await this.postService.getPostsByUserIds(userIds),
-    );
-  }
-
-  private createPostsCommentsLoader() {
-    return new DataLoader<string, DbComment[]>(
-      async (postIds: string[]) =>
-        await this.commentService.getCommentsByPostIds(postIds),
-    );
-  }
-
-  private createEntitiesInteractionsLoader() {
-    return new DataLoader<string, DbInteraction[]>(
-      async (entityIds: string[]) =>
-        await this.interactionService.getInteractionsByEntityIds(entityIds),
-    );
   }
 }

@@ -9,6 +9,10 @@ import { InteractionModule } from '../interaction/interaction.module';
 import { PostModule } from '../post/post.module';
 import { DataLoaderService } from './service/dataLoader.service';
 import { AuthModule } from '../auth/auth.module';
+import { UserDataLoader } from './service/dataloader/user.dataloader';
+import { PostDataLoader } from './service/dataloader/post.dataLoader';
+import { CommentDataLoader } from './service/dataloader/comment.dataLoader';
+import { InteractionDataLoader } from './service/dataloader/interaction.dataLoader';
 
 @Module({
   imports: [
@@ -24,6 +28,10 @@ import { AuthModule } from '../auth/auth.module';
     PostResolver,
     UserResolver,
     DataLoaderService,
+    UserDataLoader,
+    PostDataLoader,
+    CommentDataLoader,
+    InteractionDataLoader,
   ],
   exports: [DataLoaderService],
 })
